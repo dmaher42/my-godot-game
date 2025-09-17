@@ -1,16 +1,44 @@
 {
-  "name": "Godot Development",
-  "image": "mcr.microsoft.com/devcontainers/universal:2-linux",
+  "name": "Godot Development Environment",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
   "features": {
-    "ghcr.io/devcontainers/features/desktop-lite:1": {},
-    "ghcr.io/devcontainers/features/common-utils:2": {}
+    "ghcr.io/devcontainers/features/desktop-lite:1": {
+      "password": "codespace",
+      "webPort": "6080",
+      "vncPort": "5901"
+    },
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": true,
+      "installOhMyZsh": true
+    }
   },
-  "postCreateCommand": "bash .devcontainer/setup.sh",
-  "forwardPorts": [6080],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "geequlim.godot-tools"
+      ]
+    }
+  },
+  "postCreateCommand": [
+    "bash",
+    ".devcontainer/setup.sh"
+  ],
+  "forwardPorts": [6080, 5901],
   "portsAttributes": {
     "6080": {
-      "label": "Desktop",
+      "label": "Desktop (noVNC)",
       "onAutoForward": "openBrowser"
+    },
+    "5901": {
+      "label": "VNC Server",
+      "onAutoForward": "ignore"
     }
-  }
+  },
+  "remoteEnv": {
+    "DISPLAY": ":1"
+  },
+  "mounts": [
+    "source=godot-cache,target=/home/vscode/.cache/godot,type=volume"
+  ]
 }
